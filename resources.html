@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="AlertHub - Resources including Safety Tips and Emergency Guides for floods, wildfires, storms, and more.">
+  <title>AlertHub - Resources</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0288d1;
+      --secondary: #26a69a;
+      --background: #eceff1;
+      --text: #263238;
+      --card-bg: #ffffff;
+      --shadow: rgba(0, 0, 0, 0.1);
+      --highlight: #26a69a;
+      --critical: #d32f2f;
+      --warning: #ff9800;
+      --info: #0288d1;
+    }
+    .dark-mode {
+      --primary: #00667f;
+      --secondary: #00695c;
+      --background: #263238;
+      --text: #b0bec5;
+      --card-bg: #37474f;
+      --shadow: rgba(0, 0, 0, 0.3);
+      --highlight: #4fc3f7;
+      --critical: #ef5350;
+      --warning: #ffa726;
+      --info: #4fc3f7;
+    }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: var(--background);
+      color: var(--text);
+      margin: 0;
+      scroll-behavior: smooth;
+      overflow-x: hidden;
+    }
+    .hero-bg {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%), url('https://source.unsplash.com/1600x900/?safety,emergency');
+      background-size: cover, cover;
+      background-position: center;
+      background-blend-mode: overlay;
+      position: relative;
+      overflow: hidden;
+      min-height: 70vh;
+    }
+    .wave-divider {
+      height: 80px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 80'%3E%3Cpath fill='url(%23gradient)' d='M0,40L48,53.3C96,67,192,93,288,106.7C384,120,480,120,576,106.7C672,93,768,67,864,53.3C960,40,1056,40,1152,53.3C1248,67,1344,93,1392,106.7L1440,120V0H0V120Z'/%3E%3Cdefs%3E%3ClinearGradient id='gradient' x1='0%25' y1='0%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' style='stop-color:%230288d1'/%3E%3Cstop offset='100%25' style='stop-color:%2326a69a'/%3E%3C/linearGradient%3E%3C/defs%3E%3C/svg%3E");
+      background-size: 100% 100%;
+    }
+    .dark-mode .wave-divider {
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 80'%3E%3Cpath fill='url(%23gradient-dark)' d='M0,40L48,53.3C96,67,192,93,288,106.7C384,120,480,120,576,106.7C672,93,768,67,864,53.3C960,40,1056,40,1152,53.3C1248,67,1344,93,1392,106.7L1440,120V0H0V120Z'/%3E%3Cdefs%3E%3ClinearGradient id='gradient-dark' x1='0%25' y1='0%25' x2='100%25' y2='0%25'%3E%3Cstop offset='0%25' style='stop-color:%2300667f'/%3E%3Cstop offset='100%25' style='stop-color:%2300695c'/%3E%3C/linearGradient%3E%3C/defs%3E%3C/svg%3E");
+    }
+    .navbar {
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      padding: 16px 32px;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      transition: background 0.3s ease;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .navbar.scrolled {
+      box-shadow: 0 4px 12px var(--shadow);
+    }
+    .navbar .logo-container {
+      display: flex;
+      align-items: center;
+    }
+    .navbar .logo-img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      margin-right: 12px;
+      background: #ffffff;
+      object-fit: cover;
+    }
+    .navbar .logo {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: #ffffff;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    }
+    .navbar .nav-link {
+      font-family: 'Roboto', sans-serif;
+      font-size: 18px;
+      font-weight: 500;
+      color: #ffffff;
+      margin-left: 24px;
+      position: relative;
+      transition: color 0.3s ease;
+    }
+    .navbar .nav-link:hover {
+      color: #4fc3f7;
+    }
+    .navbar .nav-link::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      background: #4fc3f7;
+      bottom: -4px;
+      left: 0;
+      transition: width 0.3s ease;
+    }
+    .navbar .nav-link:hover::after {
+      width: 100%;
+    }
+    .dropdown:hover .dropdown-menu {
+      display: block;
+      opacity: 1;
+      visibility: visible;
+    }
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 8px;
+      padding: 12px;
+      box-shadow: 0 4px 12px var(--shadow);
+      z-index: 1000;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+    .dropdown-menu a {
+      display: block;
+      padding: 8px 16px;
+      color: #ffffff;
+      transition: background 0.3s ease;
+    }
+    .dropdown-menu a:hover {
+      background: rgba(255, 255, 255, 0.1);
+      color: #4fc3f7;
+    }
+    .hamburger-menu {
+      display: none;
+      font-size: 28px;
+      color: #ffffff;
+      cursor: pointer;
+    }
+    .nav-menu {
+      display: flex;
+      align-items: center;
+    }
+    @media (max-width: 1024px) {
+      .navbar .nav-menu {
+        display: none;
+        position: absolute;
+        top: 80px;
+        left: 0;
+        right: 0;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        flex-direction: column;
+        padding: 24px;
+        border-radius: 0 0 12px 12px;
+        box-shadow: 0 4px 12px var(--shadow);
+        opacity: 0;
+      }
+      .navbar .nav-menu.active {
+        display: flex;
+        opacity: 1;
+      }
+      .navbar .nav-link {
+        margin: 12px 0;
+        font-size: 18px;
+      }
+      .hamburger-menu {
+        display: block;
+      }
+      .dropdown-menu {
+        position: static;
+        box-shadow: none;
+        background: transparent;
+        padding: 8px 0;
+      }
+    }
+    .card {
+      background: var(--card-bg);
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: 0 8px 16px var(--shadow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 24px var(--shadow);
+    }
+    .btn {
+      background: linear-gradient(45deg, var(--primary), var(--secondary));
+      color: #ffffff;
+      padding: 12px 24px;
+      border-radius: 8px;
+      transition: background 0.3s ease, transform 0.2s ease;
+      font-weight: 500;
+    }
+    .btn:hover {
+      background: linear-gradient(45deg, var(--secondary), #4fc3f7);
+      transform: scale(1.05);
+    }
+    .btn:active {
+      transform: scale(0.95);
+    }
+    .scroll-to-top {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: var(--primary);
+      color: #ffffff;
+      width: 48px;
+      height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px var(--shadow);
+      opacity: 0;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .scroll-to-top.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    @media (max-width: 768px) {
+      .hero-bg { min-height: 60vh; }
+      h2 { font-size: 2rem; }
+      .btn { padding: 10px 20px; font-size: 0.875rem; }
+    }
+    @media (max-width: 640px) {
+      .container { padding-left: 16px; padding-right: 16px; }
+      .navbar .logo { font-size: 24px; }
+      .navbar .logo-img { width: 32px; height: 32px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="scroll-progress"></div>
+  <nav class="navbar" id="navbar">
+    <div class="container mx-auto flex justify-between items-center">
+      <div class="logo-container">
+        <img src="https://source.unsplash.com/100x100/?logo" alt="AlertHub Logo" class="logo-img">
+        <a href="index.html" class="logo">AlertHub</a>
+      </div>
+      <div class="hamburger-menu" role="button" tabindex="0" aria-label="Toggle navigation menu">
+        <i class="fas fa-bars hamburger-icon"></i>
+      </div>
+      <div class="nav-menu flex items-center">
+        <ul class="flex space-x-6">
+          <li><a href="index.html" class="nav-link" aria-label="Go to Home">Home</a></li>
+          <li class="dropdown">
+            <a href="index.html#alerts" class="nav-link" aria-label="Go to Live Alerts">Live Alerts <i class="fas fa-chevron-down ml-1"></i></a>
+            <div class="dropdown-menu">
+              <a href="index.html#alerts-critical" aria-label="View Critical Alerts">Critical Alerts</a>
+              <a href="index.html#alerts-warning" aria-label="View Warning Alerts">Warning Alerts</a>
+              <a href="index.html#alerts-info" aria-label="View Info Alerts">Info Alerts</a>
+            </div>
+          </li>
+          <li><a href="report_danger.html" class="nav-link" aria-label="Go to Report Danger">Report Danger</a></li>
+          <li class="dropdown">
+            <a href="#" class="nav-link" aria-label="Go to Resources">Resources <i class="fas fa-chevron-down ml-1"></i></a>
+            <div class="dropdown-menu">
+              <a href="#safety-tips" aria-label="View Safety Tips">Safety Tips</a>
+              <a href="#emergency-guides" aria-label="View Emergency Guides">Emergency Guides</a>
+            </div>
+          </li>
+          <li><a href="index.html#contact" class="nav-link" aria-label="Go to Contact">Contact</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <section class="hero-bg text-white text-center py-24 relative">
+    <div class="container mx-auto px-6">
+      <h2 class="text-4xl sm:text-5xl font-bold mb-6" data-translate="resourcesTitle">Resources</h2>
+      <p class="text-xl sm:text-2xl mb-8 max-w-3xl mx-auto" data-translate="resourcesSubtitle">Prepare and Stay Safe</p>
+      <p class="text-lg sm:text-xl mb-10 max-w-4xl mx-auto" data-translate="resourcesDescription">Access safety tips and emergency guides to protect yourself and your community from floods, wildfires, storms, and more.</p>
+      <img src="https://source.unsplash.com/1200x400/?safety,emergency" alt="Safety and emergency resources scene" class="hero-image mx-auto mb-8 rounded-xl shadow-2xl object-cover">
+    </div>
+  </section>
+
+  <section id="safety-tips" class="container mx-auto px-6 py-20">
+    <h2 class="text-3xl font-bold text-center mb-12" data-translate="safetyTipsTitle">Safety Tips</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="card">
+        <h3 class="text-xl font-semibold mb-4">Flood Safety</h3>
+        <ul class="list-disc pl-5 space-y-2">
+          <li>Avoid walking or driving through floodwaters.</li>
+          <li>Move to higher ground if flooding is imminent.</li>
+          <li>Keep emergency supplies like food, water, and flashlights ready.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 class="text-xl font-semibold mb-4">Wildfire Safety</h3>
+        <ul class="list-disc pl-5 space-y-2">
+          <li>Create a defensible space around your home by clearing dry vegetation.</li>
+          <li>Have an evacuation plan and practice it with your family.</li>
+          <li>Stay informed through local news and alerts.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3 class="text-xl font-semibold mb-4">Storm Safety</h3>
+        <ul class="list-disc pl-5 space-y-2">
+          <li>Secure outdoor items that could become projectiles in high winds.</li>
+          <li>Stay indoors and away from windows during a storm.</li>
+          <li>Prepare an emergency kit with essentials like blankets and first aid.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="wave-divider"></div>
+  </section>
+
+  <section id="emergency-guides" class="container mx-auto px-6 py-20">
+    <h2 class="text-3xl font-bold text-center mb-12" data-translate="emergencyGuidesTitle">Emergency Guides</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div class="card">
+        <h3 class="text-xl font-semibold mb-4">Flood Preparedness Guide</h3>
+        <p class="mb-4">Learn how to prepare for a flood, including creating an evacuation plan, protecting your property, and understanding flood warnings.</p>
+        <a href="#" class="btn inline-block" data-translate="viewGuide">View Guide</a>
+      </div>
+      <div class="card">
+        <h3 class="text-xl font-semibold mb-4">Wildfire Evacuation Guide</h3>
+        <p class="mb-4">Step-by-step instructions for evacuating safely during a wildfire, including what to pack, routes to take, and how to stay updated.</p>
+        <a href="#" class="btn inline-block" data-translate="viewGuide">View Guide</a>
+      </div>
+      <div class="card">
+        <h3 class="text-xl font-semibold mb-4">Storm Survival Guide</h3>
+        <p class="mb-4">Detailed guidance on surviving a storm, including how to shelter safely, manage power outages, and communicate during an emergency.</p>
+        <a href="#" class="btn inline-block" data-translate="viewGuide">View Guide</a>
+      </div>
+    </div>
+    <div class="wave-divider"></div>
+  </section>
+
+  <footer class="bg-gray-800 dark-mode:bg-gray-900 text-white py-8">
+    <div class="container mx-auto px-6 text-center">
+      <p class="text-sm">© 2025 AlertHub Co. All Rights Reserved. | <a href="#" class="text-blue-400 hover:text-blue-300" data-translate="privacyPolicy">Privacy Policy</a> | <a href="#" class="text-blue-400 hover:text-blue-300" data-translate="termsOfService">Terms of Service</a></p>
+      <div class="mt-4 flex justify-center space-x-6">
+        <a href="#" class="text-white hover:text-blue-300 share-btn" data-platform="facebook" aria-label="Share on Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="text-white hover:text-blue-300 share-btn" data-platform="twitter" aria-label="Share on Twitter"><i class="fab fa-twitter"></i></a>
+        <a href="#" class="text-white hover:text-blue-300 share-btn" data-platform="instagram" aria-label="Share on Instagram"><i class="fab fa-instagram"></i></a>
+      </div>
+    </div>
+  </footer>
+
+  <button class="scroll-to-top" id="scrollToTop" role="button" tabindex="0" aria-label="Scroll to top">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/ScrollTrigger.min.js"></script>
+  <script>
+    // State Management
+    const state = {
+      currentLanguage: localStorage.getItem('language') || 'en',
+      darkMode: localStorage.getItem('darkMode') === 'enabled',
+      timezone: localStorage.getItem('timezone') || 'CET'
+    };
+
+    // Translations
+    const translations = {
+      en: {
+        resourcesTitle: 'Resources',
+        resourcesSubtitle: 'Prepare and Stay Safe',
+        resourcesDescription: 'Access safety tips and emergency guides to protect yourself and your community from floods, wildfires, storms, and more.',
+        safetyTipsTitle: 'Safety Tips',
+        emergencyGuidesTitle: 'Emergency Guides',
+        viewGuide: 'View Guide',
+        privacyPolicy: 'Privacy Policy',
+        termsOfService: 'Terms of Service'
+      },
+      es: {
+        resourcesTitle: 'Recursos',
+        resourcesSubtitle: 'Prepárate y Mantente Seguro',
+        resourcesDescription: 'Accede a consejos de seguridad y guías de emergencia para protegerte a ti y a tu comunidad de inundaciones, incendios forestales, tormentas y más.',
+        safetyTipsTitle: 'Consejos de Seguridad',
+        emergencyGuidesTitle: 'Guías de Emergencia',
+        viewGuide: 'Ver Guía',
+        privacyPolicy: 'Política de Privacidad',
+        termsOfService: 'Términos de Servicio'
+      }
+    };
+
+    // DOM Elements
+    const elements = {
+      navbar: document.getElementById('navbar'),
+      hamburger: document.querySelector('.hamburger-menu'),
+      hamburgerIcon: document.querySelector('.hamburger-icon'),
+      navMenu: document.querySelector('.nav-menu'),
+      scrollToTop: document.getElementById('scrollToTop')
+    };
+
+    // Initialize Dark Mode
+    function initDarkMode() {
+      if (!localStorage.getItem('darkMode')) {
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+          state.darkMode = true;
+        }
+      }
+      if (state.darkMode) {
+        document.documentElement.classList.add('dark-mode');
+        document.documentElement.classList.add('dark-mode-preference-set');
+      }
+    }
+
+    // Update Language
+    function updateLanguage(lang) {
+      const validLang = lang in translations ? lang : 'en';
+      state.currentLanguage = validLang;
+      localStorage.setItem('language', validLang);
+      const elementsToTranslate = document.querySelectorAll('[data-translate]');
+      elementsToTranslate.forEach(el => {
+        const key = el.getAttribute('data-translate');
+        el.textContent = translations[validLang][key] || el.textContent;
+      });
+    }
+
+    // Real-Time Clock
+    function updateClock() {
+      const clock = document.createElement('div');
+      clock.className = 'text-white text-sm absolute top-4 right-4 dark-mode:text-gray-300';
+      document.querySelector('.hero-bg').appendChild(clock);
+      function update() {
+        const now = new Date();
+        const timezone = state.timezone === 'local' ? Intl.DateTimeFormat().resolvedOptions().timeZone : 'CET';
+        clock.textContent = `Current Time: ${now.toLocaleString('en-US', { timeZone: timezone, hour12: false })} (${timezone})`;
+      }
+      update();
+      setInterval(update, 1000);
+    }
+
+    // Toggle Dark Mode with Animation
+    function toggleDarkMode() {
+      state.darkMode = !state.darkMode;
+      document.documentElement.classList.toggle('dark-mode');
+      localStorage.setItem('darkMode', state.darkMode ? 'enabled' : 'disabled');
+      if (typeof gsap !== 'undefined') {
+        gsap.to('.hero-bg', { duration: 0.5, backgroundColor: state.darkMode ? '#263238' : '#eceff1' });
+      }
+    }
+
+    // GSAP Animations
+    function animateHero() {
+      if (typeof gsap !== 'undefined') {
+        gsap.from('.hero-bg h2', { duration: 1, opacity: 0, y: 50, ease: 'power3.out', delay: 0.3 });
+        gsap.from('.hero-bg p', { duration: 1, opacity: 0, y: 30, ease: 'power3.out', delay: 0.5, stagger: 0.2 });
+        gsap.from('.hero-image', { duration: 1, opacity: 0, y: 20, ease: 'power3.out', delay: 0.8 });
+      }
+    }
+
+    // Animate Cards on Scroll
+    function animateCards() {
+      if (typeof gsap !== 'undefined' && typeof ScrollTrigger !== 'undefined') {
+        gsap.utils.toArray('.card').forEach(card => {
+          gsap.from(card, {
+            opacity: 0,
+            y: 50,
+            duration: 1,
+            ease: 'power3.out',
+            scrollTrigger: {
+              trigger: card,
+              start: 'top 80%',
+              toggleActions: 'play none none reverse'
+            }
+          });
+        });
+      }
+    }
+
+    // Hamburger Menu Toggle
+    let isMenuOpen = false;
+    elements.hamburger.addEventListener('click', () => {
+      isMenuOpen = !isMenuOpen;
+      elements.navMenu.classList.toggle('active');
+      elements.hamburgerIcon.classList.toggle('fa-bars');
+      elements.hamburgerIcon.classList.toggle('fa-times');
+      if (typeof gsap !== 'undefined') {
+        gsap.to('.nav-menu', { duration: 0.5, opacity: isMenuOpen ? 1 : 0, ease: 'power2.out' });
+      }
+    });
+
+    // Scroll to Top
+    elements.scrollToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Initialize
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('[AlertHub] Resources Page Initialized: 02:29 PM CEST, May 25, 2025');
+      initDarkMode();
+      updateLanguage(state.currentLanguage);
+      updateClock();
+      animateHero();
+      animateCards();
+
+      // Dark Mode Toggle
+      document.querySelectorAll('.darkModeToggle').forEach(toggle => {
+        toggle.addEventListener('click', toggleDarkMode);
+      });
+
+      // Scroll Progress
+      window.addEventListener('scroll', () => {
+        const scrollTop = document.documentElement.scrollTop;
+        const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+        const progress = (scrollTop / scrollHeight) * 100;
+        document.querySelector('.scroll-progress').style.transform = `scaleX(${progress / 100})`;
+        if (scrollTop > 300) elements.scrollToTop.classList.add('active');
+        else elements.scrollToTop.classList.remove('active');
+      });
+    });
+  </script>
+</body>
+</html>

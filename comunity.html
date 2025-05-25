@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Community Hub - SafeTogether</title>
+  <!-- Tailwind CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <!-- Google Fonts (Roboto) -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { font-family: 'Roboto', sans-serif; }
+    .dark-mode { background-color: #1F2937; color: #F9FAFB; }
+    .dark-mode .bg-gray-100 { background-color: #374151; }
+    .dark-mode .bg-white { background-color: #4B5563; }
+    .dark-mode .text-blue-500 { color: #60A5FA; }
+  </style>
+</head>
+<body class="bg-gray-100 transition-colors duration-300">
+  <!-- Header -->
+  <header class="sticky top-0 bg-white shadow z-10">
+    <div class="container mx-auto p-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-blue-500">SafeTogether</h1>
+      <nav>
+        <ul class="flex space-x-4">
+          <li><a href="index.html" class="text-blue-500 hover:underline">Home</a></li>
+          <li><a href="map.html" class="text-blue-500 hover:underline">Map Alerts</a></li>
+          <li><a href="report.html" class="text-blue-500 hover:underline">Report Alert</a></li>
+          <li><a href="community.html" class="text-blue-500 hover:underline" aria-current="page">Community Hub</a></li>
+          <li><a href="#about" class="text-blue-500 hover:underline">About</a></li>
+          <li><a href="#login" class="text-blue-500 hover:underline"><i class="fas fa-user"></i></a></li>
+        </ul>
+      </nav>
+      <button id="darkModeToggle" class="text-blue-500" aria-label="Toggle dark mode">
+        <i class="fas fa-moon"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Community Hub -->
+  <div class="container mx-auto p-4">
+    <h2 class="text-3xl font-bold mb-4 text-center">Community Hub</h2>
+    <!-- Safety Tips -->
+    <section class="mb-8">
+      <h3 class="text-2xl font-semibold mb-2">Safety Tips</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-white p-4 rounded shadow">
+          <i class="fas fa-lock text-2xl text-blue-500 mb-2"></i>
+          <p>Lock doors and windows at night to prevent break-ins.</p>
+        </div>
+        <div class="bg-white p-4 rounded shadow">
+          <i class="fas fa-users text-2xl text-blue-500 mb-2"></i>
+          <p>Join a neighborhood watch to stay informed.</p>
+        </div>
+        <div class="bg-white p-4 rounded shadow">
+          <i class="fas fa-lightbulb text-2xl text-blue-500 mb-2"></i>
+          <p>Install motion-sensor lighting around your property.</p>
+        </div>
+      </div>
+    </section>
+    <!-- Emergency Contacts -->
+    <section class="mb-8">
+      <h3 class="text-2xl font-semibold mb-2">Emergency Contacts</h3>
+      <div class="bg-white p-4 rounded shadow">
+        <p>Police: <a href="tel:911" class="text-blue-500 hover:underline">911</a></p>
+        <p>Fire Department: <a href="tel:911" class="text-blue-500 hover:underline">911</a></p>
+        <p>Local Hospital: <a href="tel:+1234567890" class="text-blue-500 hover:underline">(123) 456-7890</a></p>
+        <p>Poison Control: <a href="tel:+18002221222" class="text-blue-500 hover:underline">1-800-222-1222</a></p>
+      </div>
+    </section>
+    <!-- Neighborhood Watch -->
+    <section>
+      <h3 class="text-2xl font-semibold mb-2">Neighborhood Watch Schedule</h3>
+      <div class="bg-white p-4 rounded shadow">
+        <p>Join our volunteer patrols to keep your community safe.</p>
+        <a href="https://calendar.google.com" target="_blank" class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 mt-2 inline-block">View Patrol Schedule</a>
+      </div>
+    </section>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white p-4 mt-4">
+    <div class="container mx-auto">
+      <p>Contact: <a href="mailto:info@safetogether.com" class="hover:underline">info@safetogether.com</a></p>
+      <p class="my-2">Follow us: <a href="#" class="text-blue-400 hover:underline">Twitter</a> | <a href="#" class="text-blue-400 hover:underline">Facebook</a></p>
+      <p><a href="#privacy" class="text-blue-400 hover:underline">Privacy Policy</a> | <a href="#terms" class="text-blue-400 hover:underline">Terms of Use</a></p>
+      <p class="mt-2">SafeTogether: Building safer communities through real-time collaboration.</p>
+    </div>
+  </footer>
+
+  <!-- Socket.IO Client -->
+  <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
+  <script>
+    // Dark mode toggle
+    document.getElementById('darkModeToggle').addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      const icon = document.getElementById('darkModeToggle').querySelector('i');
+      icon.classList.toggle('fa-moon');
+      icon.classList.toggle('fa-sun');
+    });
+  </script>
+</body>
+</html>
