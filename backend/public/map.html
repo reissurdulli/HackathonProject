@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Map Alerts - SafeTogether</title>
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <!-- Tailwind CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <!-- Google Fonts (Roboto) -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body { font-family: 'Roboto', sans-serif; }
+    #map { height: 500px; width: 100%; }
+    .dark-mode { background-color: #1F2937; color: #F9FAFB; }
+    .dark-mode .bg-gray-100 { background-color: #374151; }
+    .dark-mode .bg-white { background-color: #4B5563; }
+    .dark-mode .text-blue-500 { color: #60A5FA; }
+  </style>
+</head>
+<body class="bg-gray-100 transition-colors duration-300">
+  <!-- Header -->
+  <header class="sticky top-0 bg-white shadow z-10">
+    <div class="container mx-auto p-4 flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-blue-500">SafeTogether</h1>
+      <nav>
+        <ul class="flex space-x-4">
+          <li><a href="index.html" class="text-blue-500 hover:underline">Home</a></li>
+          <li><a href="map.html" class="text-blue-500 hover:underline" aria-current="page">Map Alerts</a></li>
+          <li><a href="report.html" class="text-blue-500 hover:underline">Report Alert</a></li>
+          <li><a href="community.html" class="text-blue-500 hover:underline">Community Hub</a></li>
+          <li><a href="#about" class="text-blue-500 hover:underline">About</a></li>
+          <li><a href="#login" class="text-blue-500 hover:underline"><i class="fas fa-user"></i></a></li>
+        </ul>
+      </nav>
+      <button id="darkModeToggle" class="text-blue-500" aria-label="Toggle dark mode">
+        <i class="fas fa-moon"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- Map and Filters -->
+  <div class="container mx-auto p-4 flex flex-col md:flex-row">
+    <!-- Filter Sidebar -->
+    <div class="md:w-1/4 bg-white p-4 rounded shadow mb-4 md:mb-0 md:mr-4">
+      <h2 class="text-xl font-semibold mb-2">Filter Alerts</h2>
+      <div class="mb-4">
+        <label class="block text-sm font-medium mb-1">Alert Type</label>
+        <div class="space-y-2">
+          <label><input type="checkbox" checked onchange="filterAlerts()" data-type="all" aria-label="All alerts"> All</label>
+          <label><input type="checkbox" onchange="filterAlerts()" data-type="theft" aria-label="Theft alerts"> Theft</label>
+          <label><input type="checkbox" onchange="filterAlerts()" data-type="accident" aria-label="Accident alerts"> Accident</label>
+          <label><input type="checkbox" onchange="filterAlerts()" data-type="hazard" aria-label="Hazard alerts"> Hazard</label>
+          <label><input type="checkbox" onchange="filterAlerts()" data-type="vandalism" aria-label="Vandalism alerts"> Vandalism</label>
+        </div>
+      </div>
+      <div class="mb-4">
+        <label for="dateFilter" class="block text-sm font-medium mb-1">Time Range</label>
+        <select id="dateFilter" onchange="filterAlerts()" class="w-full p-2 border rounded" aria-label="Filter by time range">
+          <option value="24h">Last 24 Hours</option>
+          <option value="3d">Last 3 Days</option>
+          <option value="7d">Last 7 Days</option>
+        </select>
+      </div>
+      <div>
+        <label for="search" class="block text-sm font-medium mb-1">Search by Location</label>
+        <input type="text" id="search" class="w-full p-2 border rounded" placeholder="e.g., Elm St" aria-label="Search alerts by location">
+        <button onclick="searchAlerts()" class="mt-2 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">Search</button>
+      </div>
+    </div>
+    <!-- Map -->
+    <div class="md:w-3/4">
+      <h2 class="text-2xl font-semibold mb-2">Live Safety Map</h2>
+      <div id="map" role="region" aria-label="Interactive map of safety alerts"></div>
+    </div>
+  </div>
+  <!-- Report Alert Button -->
+  <a href="report.html" class="fixed bottom-4 right-4 px-6 py-3 bg-green-500 text-white rounded-full hover:bg-green-600" aria-label="Report a new alert">Report Alert</a>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white p-4 mt-4">
+    <div class="container mx-auto">
+      <p>Contact: <a href="mailto:info@safetogether.com" class="hover:underline">info@safetogether.com</a></p>
+      <p class="my-2">Follow us: <a href="#" class="text-blue-400 hover:underline">Twitter</a> | <a href="#" class="text-blue-400 hover:underline">Facebook</a></p>
+      <p><a href="#privacy" class="text-blue-400 hover:underline">Privacy Policy</a> | <a href="#terms" class="text-blue-400 hover:underline">Terms of Use</a></p>
+      <p class="mt-2">SafeTogether: Building safer communities through real-time collaboration.</p>
+    </div>
+  </footer>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <!-- Socket.IO Client -->
+  <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
+  <script>
+    const socket = io('http://localhost:5000'); // Replace with backend URL
+    let map = L.map('map').setView([37.7749, -122.4194], 12); // Default: San Francisco
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+    let markers = L.layerGroup().addTo(map);
+    let alerts = [];
+
+    // Custom icons
+    const iconTypes = {
+      theft: L.icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png', iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34] }),
+      accident: L.icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-yellow.png', iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34] }),
+      hazard: L.icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-orange.png', iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34] }),
+      vandalism: L.icon({ iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-violet.png', iconSize: [25, 41], iconAnchor: [12, 41], popupAnchor: [1, -34] })
+    };
+
+    // Fetch initial alerts
+    fetch('http://localhost:5000/api/alerts')
+      .then(res => res.json())
+      .then(data => {
+        alerts = data;
+        updateMap();
+      })
+      .catch(err => console.error('Error fetching alerts:', err));
+
+    // Real-time updates
+    socket.on('newAlert', (alert) => {
+      alerts.push(alert);
+      updateMap();
+      if (Notification.permission === 'granted') {
+        new Notification('New Safety Alert', {
+          body: `${alert.type}: ${alert.description} at ${alert.location}`
+        });
+      }
+    });
+    Notification.requestPermission();
+
+    // Filter alerts
+    function filterAlerts() {
+      const types = Array.from(document.querySelectorAll('input[data-type]:checked')).map(input => input.dataset.type);
+      const dateFilter = document.getElementById('dateFilter').value;
+      const now = new Date();
+      const filteredAlerts = alerts.filter(alert => {
+        const alertTime = new Date(alert.timestamp);
+        const timeDiff = (now - alertTime) / (1000 * 60 * 60); // Hours
+        return (types.includes('all') || types.includes(alert.type)) &&
+               (dateFilter === '24h' && timeDiff <= 24 ||
+                dateFilter === '3d' && timeDiff <= 72 ||
+                dateFilter === '7d' && timeDiff <= 168);
+      });
+      updateMap(filteredAlerts);
+    }
+
+    // Search alerts
+    function searchAlerts() {
+      const query = document.getElementById('search').value.toLowerCase();
+      const filteredAlerts = alerts.filter(alert => alert.location.toLowerCase().includes(query));
+      updateMap(filteredAlerts);
+    }
+
+    // Update map
+    function updateMap(filteredAlerts = alerts) {
+      markers.clearLayers();
+      filteredAlerts.forEach(alert => {
+        L.marker([alert.lat, alert.lng], { icon: iconTypes[alert.type] || L.icon.Default })
+          .addTo(markers)
+          .bindPopup(`<strong>${alert.type}</strong>: ${alert.description}<br>${new Date(alert.timestamp).toLocaleString()}`);
+      });
+    }
+
+    // Dark mode toggle
+    document.getElementById('darkModeToggle').addEventListener('click', () => {
+      document.body.classList.toggle('dark-mode');
+      const icon = document.getElementById('darkModeToggle').querySelector('i');
+      icon.classList.toggle('fa-moon');
+      icon.classList.toggle('fa-sun');
+    });
+  </script>
+</body>
+</html>
